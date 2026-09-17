@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My AI Video Editor Agent</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #111821;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #3b82f6;
+      --accent-2: #22c55e;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 22px;
+      margin: 0;
+    }
+    .badge {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(59,130,246,0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(59,130,246,0.35);
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      background: #0b1220;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: #1f2937;
+      color: #e5e7eb;
+    }
+    .muted { color: var(--muted); font-size: 13px; }
+    .hidden { display: none; }
+    .success {
+      border-left: 4px solid var(--accent-2);
+      padding-left: 12px;
+    }
+    .error {
+      border-left: 4px solid var(--danger);
+      padding-left: 12px;
+      color: #fca5a5;
+    }
+    .code {
+      background: #07101a;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+    .top-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    @media (max-width: 700px) {
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="gate" class="container" style="max-width: 520px; margin-top: 80px;">
+    <div class="panel">
+      <h1 style="margin-bottom: 8px;">Private AI Video Editor Agent</h1>
+      <p class="muted" style="margin-top: 0;">
+        This page is private. Enter your access code to continue.
+      </p>
+      <label for="pass">Access code</label>
+      <input id="pass" type="password" placeholder="Enter your secret code" />
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button id="unlockBtn">Unlock</button>
+        <button id="showPassBtn" class="secondary">Show</button>
+      </div>
+      <p id="gateMsg" class="muted" style="margin-top:12px;"></p>
+    </div>
+  </div>
+
+  <div id="app" class="container hidden">
+    <header>
+      <div>
+        <h1>My AI Video Editor Agent</h1>
+        <span class="badge">Private • For Abhinav</span>
+      </div>
+      <button id="lockBtn" class="secondary">Lock</button>
+    </header>
+
+    <div class="panel">
+      <p class="top-note">
+        Use this form to request a new video. I’ll reply with a script + DaVinci‑ready edit blueprint.
+      </p>
+      <div class="row">
+        <div>
+          <label for="topic">Topic + goal</label>
+          <textarea id="topic" placeholder="e.g., Morning routine + study system for professionals – grow community & leads"></textarea>
+        </div>
+        <div>
+          <label for="length">Target length</label>
+          <select id="length">
+            <option>2–3 minutes</option>
+            <option>3–5 minutes</option>
+            <option>Auto (I’ll decide)</option>
+          </select>
+          <label for="platform" style="margin-top:10px;">Primary platform</label>
+          <select id="platform">
+            <option>YouTube long‑form (16:9)</option>
+            <option>Reels / Shorts (9:16)</option>
+            <option>Both</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="clips" style="margin-top:12px;">Your clips (list each with what it shows + approx duration)</label>
+      <textarea id="clips" placeholder="Clip 1: desk timelapse, ~8s&#10;Clip 2: walking in city, ~6s&#10;Clip 3: screen recording of Notion, ~15s&#10;Clip 4: you typing, ~10s"></textarea>
+
+      <div class="row" style="margin-top:12px;">
+        <div>
+          <label for="cta">CTA (if any)</label>
+          <input id="cta" placeholder="e.g., Comment 'CHECKLIST' for the PDF" />
+        </div>
+        <div>
+          <label for="style">Style vs template</label>
+          <input id="style" placeholder="Same as template / faster pacing / bigger text, etc." />
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button id="generateBtn">Generate brief for AI</button>
+        <button id="copyBtn" class="secondary">Copy</button>
+      </div>
+
+      <div id="outPanel" class="panel hidden" style="margin-top:14px;">
+        <label>Your ready‑to‑send prompt</label>
+        <div id="out" class="code"></div>
+        <p class="muted" style="margin-top:8px;">
+          Copy this and send it to your AI editor (in your chat). I’ll reply with script + DaVinci edit plan.
+        </p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <label>How to host this page privately (quick options)</label>
+      <ul class="muted" style="margin: 8px 0 0 18px;">
+        <li>GitHub Pages + private repo (only you can access).</li>
+        <li>Netlify / Vercel drag‑and‑drop + basic password (via Netlify Identity or simple middleware).</li>
+        <li>Your own hosting with .htaccess password protection.</li>
+      </ul>
+      <p class="muted" style="margin-top:8px;">
+        For strongest privacy, put this file behind a login or in a private repo only you can open.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Simple client-side password gate (not high-security, but keeps it private from casual users)
+    const PASS = "AbhinavAgent2026!"; // CHANGE THIS to your own code
+    const gate = document.getElementById('gate');
+    const app = document.getElementById('app');
+    const passInput = document.getElementById('pass');
+    const gateMsg = document.getElementById('gateMsg');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const showPassBtn = document.getElementById('showPassBtn');
+    const lockBtn = document.getElementById('lockBtn');
+
+    function checkAuth() {
+      const stored = localStorage.getItem('agent_auth');
+      if (stored === PASS) {
+        gate.classList.add('hidden');
+        app.classList.remove('hidden');
+      } else {
+        gate.classList.remove('hidden');
+        app.classList.add('hidden');
+      }
+    }
+
+    unlockBtn.addEventListener('click', () => {
+      if (passInput.value === PASS) {
+        localStorage.setItem('agent_auth', PASS);
+        gateMsg.textContent = 'Unlocked. Loading your agent...';
+        gateMsg.className = 'success';
+        setTimeout(checkAuth, 400);
+      } else {
+        gateMsg.textContent = 'Wrong code. Try again.';
+        gateMsg.className = 'error';
+      }
+    });
+
+    showPassBtn.addEventListener('click', () => {
+      passInput.type = passInput.type === 'password' ? 'text' : 'password';
+    });
+
+    lockBtn.addEventListener('click', () => {
+      localStorage.removeItem('agent_auth');
+      location.reload();
+    });
+
+    // Prompt generator
+    const generateBtn = document.getElementById('generateBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const outPanel = document.getElementById('outPanel');
+    const out = document.getElementById('out');
+
+    generateBtn.addEventListener('click', () => {
+      const topic = document.getElementById('topic').value.trim();
+      const length = document.getElementById('length').value;
+      const platform = document.getElementById('platform').value;
+      const clips = document.getElementById('clips').value.trim();
+      const cta = document.getElementById('cta').value.trim();
+      const style = document.getElementById('style').value.trim();
+
+      const prompt =
+`Act as my private AI video editor agent (DaVinci Resolve). Create a professional 2–5 minute education+vlog video for professionals.
+
+Topic + goal:
+${topic || "(fill)"}
+
+Target length:
+${length}
+
+Primary platform:
+${platform}
+
+My clips:
+${clips || "(list each clip with what it shows + approx duration)"}
+
+CTA (if any):
+${cta || "(none)"}
+
+Style vs template:
+${style || "Same as template"}
+
+Return:
+1) Final script (text-on-screen, professional tone).
+2) DaVinci-ready edit blueprint with timecoded sections, clip usage plan, text overlays, basic transitions, and music/SFX cues.
+3) Export settings for the chosen platform(s).`;
+
+      out.textContent = prompt;
+      outPanel.classList.remove('hidden');
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(out.textContent);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => (copyBtn.textContent = 'Copy'), 1500);
+      } catch {
+        copyBtn.textContent = 'Select & copy';
+        setTimeout(() => (copyBtn.textContent = 'Copy'), 1500);
+      }
+    });
+
+    checkAuth();
+  </script>
+</body>
+</html>
